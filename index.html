@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Catarina Quitério — Product Designer & CGI Artist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  /* PDF palette — exact swatches */
+  --cream:      #F0EBE0;
+  --sand:       #E4D9C4;
+  --olive:      #8E8B50;
+  --olive-lt:   #AAAB6E;
+  --blue-dust:  #9BAFC4;
+  --blue-lt:    #BCC9D6;
+  --taupe:      #B89E8A;
+  --terra:      #C4724A;
+  --choco:      #5C3A2A;
+  --choco-lt:   #7A5040;
+  --ink:        #2A2520;
+  --white:      #FAF8F2;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--cream);
+  color: var(--ink);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ─── SHARED UTILITIES ─── */
+.label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase;
+  display: inline-block;
+}
+
+/* outlined / hollow title style — signature from the PDF */
+.outline-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  -webkit-text-stroke: 2px currentColor;
+  color: transparent;
+  line-height: 1;
+}
+
+.solid-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* ─── NAV ─── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 1.25rem 3rem;
+  background: var(--cream);
+  border-bottom: 1.5px solid var(--sand);
+}
+.nav-logo {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700; font-size: 1rem; letter-spacing: 0.04em;
+  color: var(--ink); text-decoration: none;
+}
+.nav-logo span { color: var(--terra); }
+.nav-links { display: flex; gap: 2.5rem; list-style: none; }
+.nav-links a {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--choco-lt); text-decoration: none; transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--terra); }
+
+/* ─── HERO ─── */
+.hero {
+  min-height: 100vh;
+  background: var(--cream);
+  display: flex; flex-direction: column; justify-content: flex-end;
+  padding: 7rem 3rem 4rem;
+  position: relative; overflow: hidden;
+}
+
+/* big colour block top-right */
+.hero-blob {
+  position: absolute; top: 0; right: 0;
+  width: 55%; height: 65%;
+  background: var(--blue-dust);
+  border-radius: 0 0 0 60px;
+  z-index: 0;
+}
+.hero-blob::after {
+  content: '';
+  position: absolute; bottom: -40px; left: -40px;
+  width: 200px; height: 200px;
+  background: var(--olive);
+  border-radius: 50%;
+}
+
+.hero-content { position: relative; z-index: 1; }
+
+.hero-tag {
+  display: inline-flex; align-items: center; gap: 0.6rem;
+  background: var(--terra); color: var(--white);
+  padding: 0.4rem 0.9rem; border-radius: 100px;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase;
+  margin-bottom: 2rem;
+}
+.hero-tag::before { content: '✦'; font-size: 0.5rem; }
+
+.hero-name-block { margin-bottom: 2.5rem; }
+.hero-name-block .solid-title {
+  font-size: clamp(4rem, 9vw, 8.5rem);
+  color: var(--ink); display: block;
+}
+.hero-name-block .outline-title {
+  font-size: clamp(4rem, 9vw, 8.5rem);
+  color: var(--olive); display: block;
+  margin-top: -0.1em;
+}
+
+.hero-bottom {
+  display: flex; justify-content: space-between; align-items: flex-end;
+  gap: 2rem;
+}
+.hero-desc {
+  max-width: 40ch; font-size: 1rem; font-weight: 300;
+  color: var(--choco-lt); line-height: 1.8;
+}
+.hero-scroll {
+  display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--taupe);
+}
+.scroll-arrow {
+  width: 36px; height: 36px;
+  border: 1.5px solid var(--taupe); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem;
+  animation: bounce 2s ease-in-out infinite;
+}
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(5px); }
+}
+
+/* ─── ABOUT  (dusty blue bg — PDF style) ─── */
+.about {
+  background: var(--blue-dust);
+  display: grid; grid-template-columns: 1fr 1.2fr;
+  min-height: 70vh;
+}
+.about-photo-col {
+  display: flex; align-items: stretch;
+  background: var(--blue-lt);
+  position: relative; overflow: hidden; min-height: 440px;
+}
+.about-photo-inner {
+  width: 100%; display: flex; align-items: center; justify-content: center;
+  flex-direction: column; gap: 1rem;
+  background: linear-gradient(160deg, var(--blue-lt) 0%, var(--blue-dust) 100%);
+}
+.about-avatar {
+  width: 130px; height: 130px; border-radius: 50%;
+  background: var(--terra);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 2.8rem;
+  color: var(--white);
+  border: 4px solid var(--white);
+}
+.about-deco {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase;
+  color: rgba(255,255,255,0.5); margin-top: 0.5rem;
+}
+
+.about-text {
+  padding: 5rem 4rem;
+  display: flex; flex-direction: column; justify-content: center;
+}
+.about-text .label { color: var(--white); opacity: 0.6; margin-bottom: 1.5rem; }
+.about-text h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700; font-size: clamp(2rem, 3.5vw, 3.2rem);
+  color: var(--white); margin-bottom: 1.75rem; line-height: 1.1;
+}
+.about-text h2 .outline {
+  -webkit-text-stroke: 2px var(--white);
+  color: transparent;
+}
+.about-text p {
+  font-size: 0.95rem; color: rgba(255,255,255,0.75);
+  line-height: 1.85; max-width: 44ch; margin-bottom: 1rem; font-weight: 300;
+}
+.tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.75rem; }
+.tag {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 0.35rem 0.8rem;
+  border: 1.5px solid rgba(255,255,255,0.4); color: rgba(255,255,255,0.7);
+  border-radius: 100px;
+}
+
+/* ─── WORK ─── */
+.work {
+  background: var(--cream);
+  padding: 6rem 3rem 0;
+}
+.work-intro {
+  display: flex; justify-content: space-between; align-items: flex-end;
+  margin-bottom: 4rem; gap: 2rem;
+}
+.work-intro-left .label { color: var(--terra); margin-bottom: 1rem; }
+.work-intro-left h2 {
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  color: var(--ink);
+}
+.work-intro-left h2 .outline-title {
+  color: var(--olive); -webkit-text-stroke: 2px var(--olive);
+}
+.work-intro-right {
+  max-width: 30ch; font-size: 0.9rem; color: var(--taupe);
+  line-height: 1.75; font-weight: 300; text-align: right;
+}
+
+/* PROJECT CARDS — coloured bg per PDF spread style */
+.project-list { display: flex; flex-direction: column; gap: 3px; }
+
+.project-row {
+  display: grid; gap: 3px;
+}
+.project-row.duo { grid-template-columns: 1.3fr 1fr; }
+.project-row.trio { grid-template-columns: 1fr 1fr 1fr; }
+.project-row.solo { grid-template-columns: 1fr; }
+
+.proj {
+  position: relative; overflow: hidden;
+  min-height: 320px;
+  display: flex; flex-direction: column; justify-content: flex-end;
+  padding: 2.25rem;
+  cursor: pointer;
+  transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
+}
+.proj:hover { transform: scale(0.985); }
+
+/* PDF-matched bg colours per project */
+.proj-olive   { background: var(--olive); }
+.proj-blue    { background: var(--blue-dust); }
+.proj-choco   { background: var(--choco); }
+.proj-terra   { background: var(--terra); }
+.proj-taupe   { background: var(--taupe); }
+.proj-sand    { background: var(--sand); }
+.proj-olived  { background: #6B6840; }
+.proj-bluelt  { background: var(--blue-lt); }
+
+.proj-content { position: relative; z-index: 2; }
+.proj-client {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase;
+  margin-bottom: 0.35rem;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.3s, transform 0.3s;
+}
+.proj:hover .proj-client { opacity: 1; transform: none; }
+
+/* light vs dark text per background */
+.proj-olive .proj-client,
+.proj-choco .proj-client,
+.proj-olived .proj-client { color: rgba(240,235,224,0.7); }
+.proj-blue .proj-client,
+.proj-taupe .proj-client,
+.proj-bluelt .proj-client { color: rgba(42,37,32,0.6); }
+.proj-terra .proj-client { color: rgba(240,235,224,0.8); }
+.proj-sand .proj-client { color: rgba(42,37,32,0.6); }
+
+.proj-name {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700; font-size: clamp(1.3rem, 2.5vw, 2rem);
+  line-height: 1.05; margin-bottom: 0.4rem;
+}
+.proj-olive .proj-name,
+.proj-choco .proj-name,
+.proj-terra .proj-name,
+.proj-olived .proj-name { color: var(--white); }
+.proj-blue .proj-name,
+.proj-taupe .proj-name,
+.proj-sand .proj-name,
+.proj-bluelt .proj-name { color: var(--ink); }
+
+.proj-type {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase;
+}
+.proj-olive .proj-type,
+.proj-choco .proj-type,
+.proj-terra .proj-type,
+.proj-olived .proj-type { color: rgba(240,235,224,0.55); }
+.proj-blue .proj-type,
+.proj-taupe .proj-type,
+.proj-sand .proj-type,
+.proj-bluelt .proj-type { color: rgba(42,37,32,0.5); }
+
+/* big outlined decorative word on cards */
+.proj-deco-word {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+  font-size: clamp(4rem, 10vw, 8rem);
+  white-space: nowrap; pointer-events: none; line-height: 1;
+  opacity: 0.08;
+  letter-spacing: -0.02em;
+}
+.proj-olive .proj-deco-word,
+.proj-choco .proj-deco-word,
+.proj-terra .proj-deco-word,
+.proj-olived .proj-deco-word { color: var(--white); }
+.proj-blue .proj-deco-word,
+.proj-taupe .proj-deco-word,
+.proj-sand .proj-deco-word,
+.proj-bluelt .proj-deco-word { color: var(--ink); }
+
+/* corner number */
+.proj-num {
+  position: absolute; top: 1.5rem; right: 1.75rem;
+  font-family: 'Space Mono', monospace; font-size: 0.7rem;
+  letter-spacing: 0.1em; opacity: 0.35;
+}
+.proj-olive .proj-num,
+.proj-choco .proj-num,
+.proj-terra .proj-num,
+.proj-olived .proj-num { color: var(--white); }
+.proj-blue .proj-num,
+.proj-taupe .proj-num,
+.proj-sand .proj-num,
+.proj-bluelt .proj-num { color: var(--ink); }
+
+/* ─── SERVICES (olive bg) ─── */
+.services {
+  background: var(--olive);
+  padding: 7rem 3rem;
+  margin-top: 3px;
+}
+.services-top {
+  display: flex; justify-content: space-between; align-items: flex-end;
+  margin-bottom: 4rem; gap: 2rem;
+}
+.services-top .label { color: rgba(240,235,224,0.6); }
+.services-top h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700; font-size: clamp(2.2rem, 5vw, 4.5rem);
+  color: var(--white); line-height: 1.05;
+}
+.services-top h2 .outline-title {
+  color: transparent; -webkit-text-stroke: 2px var(--white);
+}
+.services-sub {
+  max-width: 30ch; font-size: 0.9rem; color: rgba(240,235,224,0.6);
+  line-height: 1.7; text-align: right;
+}
+
+.services-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 1.5px;
+}
+.service-cell {
+  background: rgba(0,0,0,0.12);
+  padding: 2.25rem 2rem;
+  transition: background 0.2s;
+}
+.service-cell:hover { background: rgba(0,0,0,0.2); }
+.service-n {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem; color: rgba(240,235,224,0.5);
+  letter-spacing: 0.15em; margin-bottom: 1rem;
+}
+.service-cell h3 {
+  font-family: 'Space Grotesk', sans-serif; font-weight: 600;
+  font-size: 1.05rem; color: var(--white); margin-bottom: 0.7rem; line-height: 1.2;
+}
+.service-cell p {
+  font-size: 0.85rem; color: rgba(240,235,224,0.6);
+  line-height: 1.75; font-weight: 300;
+}
+
+/* ─── PRESS (sand / taupe bg) ─── */
+.press {
+  background: var(--sand);
+  padding: 6rem 3rem;
+}
+.press-inner {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 3.5rem; gap: 2rem;
+}
+.press-inner .label { color: var(--terra); margin-bottom: 1rem; display: block; }
+.press-inner h2 {
+  font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+  font-size: clamp(2rem, 4vw, 3.5rem); color: var(--ink);
+  line-height: 1.05;
+}
+.press-inner h2 .outline-title {
+  color: transparent; -webkit-text-stroke: 2px var(--olive);
+}
+.press-note { font-size: 0.85rem; color: var(--taupe); max-width: 28ch; text-align: right; }
+.press-logos {
+  display: flex; gap: 3rem; flex-wrap: wrap; align-items: center;
+  padding-top: 2rem; border-top: 1.5px solid rgba(92,58,42,0.15);
+}
+.press-pub {
+  font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+  font-size: clamp(1.2rem, 2.5vw, 2rem); letter-spacing: 0.02em;
+  color: rgba(42,37,32,0.25); transition: color 0.2s; text-transform: uppercase;
+}
+.press-pub:hover { color: var(--terra); }
+
+/* ─── CONTACT (choco bg) ─── */
+.contact {
+  background: var(--choco);
+  padding: 8rem 3rem;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 5rem; align-items: center;
+}
+.contact-left .label { color: rgba(240,235,224,0.5); margin-bottom: 1.5rem; }
+.contact-left h2 {
+  font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+  font-size: clamp(2.5rem, 6vw, 5rem); color: var(--white); line-height: 1;
+}
+.contact-left h2 .outline-title {
+  color: transparent; -webkit-text-stroke: 2.5px var(--terra);
+}
+.contact-right { display: flex; flex-direction: column; gap: 0; }
+.contact-item {
+  padding: 1.5rem 0;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.contact-item:first-child { border-top: 1px solid rgba(255,255,255,0.1); }
+.c-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase;
+  color: rgba(240,235,224,0.4); margin-bottom: 0.35rem;
+}
+.c-value {
+  font-family: 'Space Grotesk', sans-serif; font-weight: 600;
+  font-size: 1rem; color: var(--white);
+}
+
+/* ─── FOOTER ─── */
+footer {
+  background: var(--ink);
+  padding: 1.75rem 3rem;
+  display: flex; justify-content: space-between; align-items: center;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem; letter-spacing: 0.12em; color: rgba(240,235,224,0.3);
+}
+.footer-mark {
+  font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+  font-size: 0.95rem; letter-spacing: 0.04em; text-transform: uppercase;
+  color: rgba(240,235,224,0.6);
+}
+
+/* ─── REVEAL ─── */
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.65s ease, transform 0.65s cubic-bezier(0.16,1,0.3,1); }
+.reveal.in { opacity: 1; transform: none; }
+.d1 { transition-delay: 0.08s; }
+.d2 { transition-delay: 0.16s; }
+.d3 { transition-delay: 0.24s; }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 860px) {
+  nav { padding: 1.1rem 1.5rem; }
+  .nav-links { display: none; }
+  .hero { padding: 6rem 1.5rem 3.5rem; }
+  .hero-blob { width: 70%; }
+  .about { grid-template-columns: 1fr; }
+  .about-photo-col { min-height: 260px; }
+  .about-text { padding: 3rem 1.5rem; }
+  .work { padding: 5rem 1.5rem 0; }
+  .work-intro { flex-direction: column; gap: 1.25rem; }
+  .work-intro-right { text-align: left; }
+  .project-row.duo,
+  .project-row.trio { grid-template-columns: 1fr; }
+  .services { padding: 5rem 1.5rem; }
+  .services-top { flex-direction: column; }
+  .services-top .services-sub { text-align: left; }
+  .services-grid { grid-template-columns: 1fr; }
+  .press { padding: 4rem 1.5rem; }
+  .press-inner { flex-direction: column; }
+  .press-note { text-align: left; }
+  .contact { grid-template-columns: 1fr; padding: 5rem 1.5rem; gap: 3rem; }
+  footer { flex-direction: column; gap: 0.5rem; text-align: center; padding: 1.5rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, .reveal { transition: none !important; animation: none !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">Catarina <span>Quitério</span></a>
+  <ul class="nav-links">
+    <li><a href="#work">Work</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-blob" aria-hidden="true"></div>
+  <div class="hero-content">
+    <div class="hero-tag">Product Designer &amp; CGI Artist</div>
+    <div class="hero-name-block">
+      <span class="solid-title">Catarina</span>
+      <span class="outline-title">Quitério</span>
+    </div>
+    <div class="hero-bottom">
+      <p class="hero-desc">
+        From hand-drawn photorealistic portraits to immersive 3D worlds — crafting objects and spaces that resonate with warmth, beauty, and a touch of wonder.
+      </p>
+      <div class="hero-scroll">
+        <div class="scroll-arrow">↓</div>
+        <span>Scroll</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="about-photo-col">
+    <div class="about-photo-inner">
+      <div class="about-avatar">CQ</div>
+      <p class="about-deco">Porto · Portugal</p>
+    </div>
+  </div>
+  <div class="about-text">
+    <span class="label">About me</span>
+    <h2 class="reveal">Crafting beauty<br><span class="outline">with purpose.</span></h2>
+    <p class="reveal d1">I'm Catarina — a 27-year-old Product Designer and CGI Artist with a lifelong passion for creativity. From my early days of meticulously hand-drawn photorealistic portraits, I've been captivated by the power of visual artistry.</p>
+    <p class="reveal d2">Inspired by the transformative world of CGI in film, I harness the potential of digital tools to bring ideas to life. My mission is to design products and spaces that resonate with people's emotions and memories.</p>
+    <div class="tags reveal d3">
+      <span class="tag">Product Design</span>
+      <span class="tag">3D Modelling</span>
+      <span class="tag">CGI Rendering</span>
+      <span class="tag">Concept Design</span>
+      <span class="tag">Interior CGI</span>
+      <span class="tag">Architectural Viz</span>
+    </div>
+  </div>
+</section>
+
+<!-- WORK -->
+<section class="work" id="work">
+  <div class="work-intro">
+    <div class="work-intro-left">
+      <span class="label">Selected projects</span>
+      <h2 class="solid-title">Selected<br><span class="outline-title" style="-webkit-text-stroke:2px var(--olive);color:transparent">Work</span></h2>
+    </div>
+    <p class="work-intro-right">Furniture, product, architecture, and hospitality — across the brands that shape the world of design.</p>
+  </div>
+
+  <div class="project-list">
+
+    <div class="project-row duo">
+      <div class="proj proj-olive reveal">
+        <span class="proj-num">01</span>
+        <div class="proj-deco-word">BETH</div>
+        <div class="proj-content">
+          <p class="proj-client">Ottiu®</p>
+          <h3 class="proj-name">Beth Stool</h3>
+          <p class="proj-type">Concept Design · 3D Modelling · Environment</p>
+        </div>
+      </div>
+      <div class="proj proj-blue reveal d1">
+        <span class="proj-num">02</span>
+        <div class="proj-deco-word">OP ART</div>
+        <div class="proj-content">
+          <p class="proj-client">Malabar®</p>
+          <h3 class="proj-name">Op Art Center Table</h3>
+          <p class="proj-type">Concept Design · 3D Modelling</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-row trio">
+      <div class="proj proj-choco reveal">
+        <span class="proj-num">03</span>
+        <div class="proj-deco-word">VIV ID</div>
+        <div class="proj-content">
+          <p class="proj-client">Malabar®</p>
+          <h3 class="proj-name">Viv Id Chaise Longue</h3>
+          <p class="proj-type">Concept · 3D · Environment</p>
+        </div>
+      </div>
+      <div class="proj proj-terra reveal d1">
+        <span class="proj-num">04</span>
+        <div class="proj-deco-word">KEPPEL</div>
+        <div class="proj-content">
+          <p class="proj-client">Wood Tailors Club®</p>
+          <h3 class="proj-name">Keppel Ping Pong Table</h3>
+          <p class="proj-type">Concept · 3D · Environment</p>
+        </div>
+      </div>
+      <div class="proj proj-taupe reveal d2">
+        <span class="proj-num">05</span>
+        <div class="proj-deco-word">DUDLEY</div>
+        <div class="proj-content">
+          <p class="proj-client">Wood Tailors Club®</p>
+          <h3 class="proj-name">Dudley Sofa</h3>
+          <p class="proj-type">Concept · 3D · Environment</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-row duo">
+      <div class="proj proj-olived reveal" style="min-height:380px">
+        <span class="proj-num">06</span>
+        <div class="proj-deco-word">BIG</div>
+        <div class="proj-content">
+          <p class="proj-client">BIG — Bjarke Ingels Group</p>
+          <h3 class="proj-name">Architectural Project</h3>
+          <p class="proj-type">Photorealistic CGI · Exterior Visualisation</p>
+        </div>
+      </div>
+      <div class="proj proj-bluelt reveal d1" style="min-height:380px">
+        <span class="proj-num">07</span>
+        <div class="proj-deco-word">HILTON</div>
+        <div class="proj-content">
+          <p class="proj-client">Saraiva e Associados</p>
+          <h3 class="proj-name">Hilton Lisboa</h3>
+          <p class="proj-type">Hospitality · Interior Visualisation</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-row solo">
+      <div class="proj proj-sand reveal" style="min-height:260px">
+        <span class="proj-num">08</span>
+        <div class="proj-deco-word">RESIDENTIAL</div>
+        <div class="proj-content">
+          <p class="proj-client">Residential · Switzerland</p>
+          <h3 class="proj-name">Switzerland Residence</h3>
+          <p class="proj-type">Photorealistic Interior CGI · Multiple Rooms</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-row trio">
+      <div class="proj proj-blue reveal">
+        <span class="proj-num">09</span>
+        <div class="proj-deco-word">PROPORTION</div>
+        <div class="proj-content">
+          <p class="proj-client">Malabar®</p>
+          <h3 class="proj-name">Proportion II Console</h3>
+          <p class="proj-type">Concept · 3D · Environment</p>
+        </div>
+      </div>
+      <div class="proj proj-olive reveal d1">
+        <span class="proj-num">10</span>
+        <div class="proj-deco-word">GRENVILLE</div>
+        <div class="proj-content">
+          <p class="proj-client">Wood Tailors Club®</p>
+          <h3 class="proj-name">Grenville Center Table</h3>
+          <p class="proj-type">Concept · 3D · Environment</p>
+        </div>
+      </div>
+      <div class="proj proj-choco reveal d2">
+        <span class="proj-num">11</span>
+        <div class="proj-deco-word">CIRCULUS</div>
+        <div class="proj-content">
+          <p class="proj-client">Malabar®</p>
+          <h3 class="proj-name">Circulus Dining Table</h3>
+          <p class="proj-type">Concept · 3D Modelling</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-row duo">
+      <div class="proj proj-terra reveal">
+        <span class="proj-num">12</span>
+        <div class="proj-deco-word">VIV ID</div>
+        <div class="proj-content">
+          <p class="proj-client">Malabar®</p>
+          <h3 class="proj-name">Viv Id II Sofa</h3>
+          <p class="proj-type">Concept · 3D · Environment</p>
+        </div>
+      </div>
+      <div class="proj proj-taupe reveal d1">
+        <span class="proj-num">13</span>
+        <div class="proj-deco-word">LAMP</div>
+        <div class="proj-content">
+          <p class="proj-client">Bureau Benjamin</p>
+          <h3 class="proj-name">Table Lamp</h3>
+          <p class="proj-type">3D Modelling</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-row duo">
+      <div class="proj proj-olived reveal" style="min-height:380px">
+        <span class="proj-num">14</span>
+        <div class="proj-deco-word">HUBLOT</div>
+        <div class="proj-content">
+          <p class="proj-client">Christian Lahoude Studio</p>
+          <h3 class="proj-name">Hublot Store · Beverly Hills</h3>
+          <p class="proj-type">Retail · Photorealistic CGI</p>
+        </div>
+      </div>
+      <div class="proj proj-bluelt reveal d1" style="min-height:380px">
+        <span class="proj-num">15</span>
+        <div class="proj-deco-word">FMS</div>
+        <div class="proj-content">
+          <p class="proj-client">FMS Group · Arquitetura e Engenharia</p>
+          <h3 class="proj-name">FMS Architectural Project</h3>
+          <p class="proj-type">Architectural · Exterior CGI</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-row duo">
+      <div class="proj proj-sand reveal">
+        <span class="proj-num">16</span>
+        <div class="proj-deco-word">AÇORES</div>
+        <div class="proj-content">
+          <p class="proj-client">Residential · Açores</p>
+          <h3 class="proj-name">Açores Residence</h3>
+          <p class="proj-type">Photorealistic Interior &amp; Exterior CGI</p>
+        </div>
+      </div>
+      <div class="proj proj-blue reveal d1">
+        <span class="proj-num">17</span>
+        <div class="proj-deco-word">CAMPAIGN</div>
+        <div class="proj-content">
+          <p class="proj-client">Concept Study</p>
+          <h3 class="proj-name">Ad Campaign Concept</h3>
+          <p class="proj-type">CGI · Product Photography Reimagined</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="services" id="services">
+  <div class="services-top">
+    <div>
+      <span class="label" style="color:rgba(240,235,224,0.5);display:block;margin-bottom:1rem">What I do</span>
+      <h2>What I<br><span class="outline-title">bring.</span></h2>
+    </div>
+    <p class="services-sub">Six disciplines, one vision: beautiful things that feel alive.</p>
+  </div>
+  <div class="services-grid">
+    <div class="service-cell reveal">
+      <p class="service-n">01</p>
+      <h3>Product & Furniture Design</h3>
+      <p>Concept development from brief to final design. Full 3D modelling and specification-ready outputs for furniture and luxury product clients.</p>
+    </div>
+    <div class="service-cell reveal d1">
+      <p class="service-n">02</p>
+      <h3>3D Modelling & CGI</h3>
+      <p>Photorealistic visualisations using industry-leading tools. Products, interiors, and architectural exteriors rendered to near-photograph quality.</p>
+    </div>
+    <div class="service-cell reveal d2">
+      <p class="service-n">03</p>
+      <h3>Environment & Lifestyle Imagery</h3>
+      <p>Full scene construction staging products in rich context — boutiques, living rooms, outdoor spaces — for catalogue, press, and commercial use.</p>
+    </div>
+    <div class="service-cell reveal">
+      <p class="service-n">04</p>
+      <h3>Architectural Visualisation</h3>
+      <p>Exterior and interior renders for architects and developers. Experienced with large-scale residential complexes and high-end hospitality projects.</p>
+    </div>
+    <div class="service-cell reveal d1">
+      <p class="service-n">05</p>
+      <h3>Ad Campaign Concepts</h3>
+      <p>Product photography reimagined in CGI — creating campaign imagery that blends real-world references with digitally crafted atmospheres.</p>
+    </div>
+    <div class="service-cell reveal d2">
+      <p class="service-n">06</p>
+      <h3>Brand Collaboration</h3>
+      <p>Ongoing design partnerships with furniture and lifestyle brands, supporting product launches from concept sketch through to press-ready imagery.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PRESS -->
+<section class="press" id="press">
+  <div class="press-inner">
+    <div>
+      <span class="label" style="color:var(--terra);display:block;margin-bottom:1rem">In the press</span>
+      <h2>Works on<br><span class="outline-title">Press.</span></h2>
+    </div>
+    <p class="press-note">Featured in international design publications across Europe.</p>
+  </div>
+  <div class="press-logos">
+    <span class="press-pub">Elle Decoration</span>
+    <span class="press-pub">Design Marbella</span>
+    <span class="press-pub">Nuevo Estilo</span>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div class="contact-left reveal">
+    <span class="label">Let's work together</span>
+    <h2>Have a<br>project<br><span class="outline-title" style="-webkit-text-stroke:2.5px var(--terra)">in mind?</span></h2>
+  </div>
+  <div class="contact-right reveal d1">
+    <div class="contact-item">
+      <p class="c-label">Location</p>
+      <p class="c-value">Portugal</p>
+    </div>
+    <div class="contact-item">
+      <p class="c-label">Disciplines</p>
+      <p class="c-value">Product Design · CGI · Architectural Visualisation</p>
+    </div>
+    <div class="contact-item">
+      <p class="c-label">Availability</p>
+      <p class="c-value">Open to freelance & brand collaborations</p>
+    </div>
+    <div class="contact-item">
+      <p class="c-label">Get in touch</p>
+      <p class="c-value">catarina@quiterio.com</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span class="footer-mark">Catarina Quitério</span>
+  <span>Product Designer & CGI Artist</span>
+  <span>© 2026</span>
+</footer>
+
+<script>
+const reveals = document.querySelectorAll('.reveal');
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); } });
+}, { threshold: 0.1 });
+reveals.forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
