@@ -263,6 +263,23 @@ nav {
 .proj-olived  { background: #6B6840; }
 .proj-bluelt  { background: var(--blue-lt); }
 
+/* ─── CARD BACKGROUND IMAGES (auto-show only when the file exists) ─── */
+.proj-bg {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; z-index: 0; opacity: 0;
+  transition: opacity 0.45s ease; pointer-events: none;
+}
+.proj.has-img .proj-bg { opacity: 1; }
+.proj.has-img::after {
+  content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background: linear-gradient(to top, rgba(0,0,0,0.62) 0%, rgba(0,0,0,0.28) 42%, rgba(0,0,0,0) 78%);
+}
+.proj-num { z-index: 2; }
+.proj.has-img .proj-name,
+.proj.has-img .proj-num   { color: #fff !important; }
+.proj.has-img .proj-type,
+.proj.has-img .proj-client { color: rgba(255,255,255,0.82) !important; }
+
 .proj-content { position: relative; z-index: 2; }
 .proj-client {
   font-family: 'Space Mono', monospace;
@@ -502,6 +519,54 @@ footer {
 @media (prefers-reduced-motion: reduce) {
   *, .reveal { transition: none !important; animation: none !important; }
 }
+
+/* ─── CLICKABLE CARDS + LIGHTBOX GALLERY ─── */
+.proj.has-img { cursor: pointer; }
+.proj.has-img::before {
+  content: 'View gallery';
+  position: absolute; left: 1.5rem; top: 1.4rem; z-index: 3;
+  font-family: 'Space Mono', monospace; font-size: 0.6rem;
+  letter-spacing: 0.14em; text-transform: uppercase; color: #fff;
+  padding: 0.4rem 0.75rem; border: 1px solid rgba(255,255,255,0.55);
+  border-radius: 2rem; opacity: 0; transform: translateY(-4px);
+  transition: opacity 0.3s ease, transform 0.3s ease; pointer-events: none;
+}
+.proj.has-img:hover::before { opacity: 1; transform: none; }
+
+.lightbox {
+  position: fixed; inset: 0; z-index: 1000;
+  background: rgba(20,18,16,0.95); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; visibility: hidden; transition: opacity 0.35s ease, visibility 0.35s ease;
+}
+.lightbox.open { opacity: 1; visibility: visible; }
+.lb-stage { margin: 0; max-width: 88vw; max-height: 82vh; display: flex; align-items: center; justify-content: center; }
+.lb-img {
+  max-width: 88vw; max-height: 82vh; object-fit: contain;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.5); opacity: 0; transition: opacity 0.25s ease;
+}
+.lb-img.ready { opacity: 1; }
+.lb-close, .lb-prev, .lb-next {
+  position: absolute; background: transparent; color: #fff;
+  border: 1px solid rgba(255,255,255,0.4); border-radius: 50%;
+  cursor: pointer; display: grid; place-items: center;
+  transition: background 0.25s ease, border-color 0.25s ease; z-index: 2;
+}
+.lb-close { top: 1.5rem; right: 1.5rem; width: 2.8rem; height: 2.8rem; font-size: 1.5rem; line-height: 1; }
+.lb-prev, .lb-next { top: 50%; transform: translateY(-50%); width: 3.2rem; height: 3.2rem; font-size: 1.8rem; line-height: 1; }
+.lb-prev { left: 1.5rem; }
+.lb-next { right: 1.5rem; }
+.lb-close:hover, .lb-prev:hover, .lb-next:hover { background: rgba(255,255,255,0.15); border-color: #fff; }
+.lb-prev[hidden], .lb-next[hidden] { display: none; }
+.lb-meta { position: absolute; bottom: 1.6rem; left: 0; right: 0; text-align: center; }
+.lb-caption { font-family: 'Space Grotesk', sans-serif; font-size: 1rem; color: rgba(255,255,255,0.88); }
+.lb-counter { font-family: 'Space Mono', monospace; font-size: 0.72rem; letter-spacing: 0.18em; margin-top: 0.35rem; color: rgba(255,255,255,0.55); }
+@media (max-width: 640px) {
+  .lb-prev, .lb-next { width: 2.6rem; height: 2.6rem; font-size: 1.4rem; }
+  .lb-prev { left: 0.6rem; }
+  .lb-next { right: 0.6rem; }
+  .lb-stage, .lb-img { max-width: 94vw; }
+}
 </style>
 </head>
 <body>
@@ -548,7 +613,9 @@ footer {
   <div class="about-text">
     <span class="label">About me</span>
     <h2 class="reveal">Crafting beauty<br><span class="outline">with purpose.</span></h2>
-    <p class="reveal d1">I'm Catarina — an industrial designer and 3D artist based in Porto, with ten years turning ideas into products, furniture and photorealistic worlds.I'm Catarina — an industrial designer and 3D artist based in Porto, with ten years turning ideas into products, furniture and photorealistic worlds. I design for warmth and precision in equal measure, whether I'm crafting a physical object or building an immersive digital scene.</p>
+    <p class="reveal d1">I'm Catarina — an industrial designer and 3D artist based in Porto, with ten years turning ideas into products, furniture and photorealistic worlds.I'm Catarina — an industrial designer and 3D artist based in Porto, with ten years turning ideas into products, furniture and photorealistic worlds. I design for warmth and precision in equal measure, whether I'm crafting a physical object or building an immersive digital scene.
+
+</p>
     <p class="reveal d2">Newly certified as a trainer and trained in product management, I love working where craft, people and process meet.</p>
     <div class="tags reveal d3">
       <span class="tag">Product Design</span>
@@ -575,6 +642,7 @@ footer {
 
     <div class="project-row duo">
       <div class="proj proj-olive reveal">
+        <img class="proj-bg" src="images/01-beth-stool.jpg" alt="" loading="lazy" onload="this.parentElement.classList.add('has-img')" onerror="this.remove()">
         <span class="proj-num">01</span>
         <div class="proj-deco-word">BETH</div>
         <div class="proj-content">
@@ -584,6 +652,7 @@ footer {
         </div>
       </div>
       <div class="proj proj-blue reveal d1">
+        <img class="proj-bg" src="images/02-op-art.jpg" alt="" loading="lazy" onload="this.parentElement.classList.add('has-img')" onerror="this.remove()">
         <span class="proj-num">02</span>
         <div class="proj-deco-word">OP ART</div>
         <div class="proj-content">
@@ -596,6 +665,7 @@ footer {
 
     <div class="project-row trio">
       <div class="proj proj-choco reveal">
+        <img class="proj-bg" src="images/03-viv-id-chaise.jpg" alt="" loading="lazy" onload="this.parentElement.classList.add('has-img')" onerror="this.remove()">
         <span class="proj-num">03</span>
         <div class="proj-deco-word">VIV ID</div>
         <div class="proj-content">
@@ -605,6 +675,7 @@ footer {
         </div>
       </div>
       <div class="proj proj-terra reveal d1">
+        <img class="proj-bg" src="images/04-keppel.jpg" alt="" loading="lazy" onload="this.parentElement.classList.add('has-img')" onerror="this.remove()">
         <span class="proj-num">04</span>
         <div class="proj-deco-word">KEPPEL</div>
         <div class="proj-content">
@@ -614,6 +685,7 @@ footer {
         </div>
       </div>
       <div class="proj proj-taupe reveal d2">
+        <img class="proj-bg" src="images/05-dudley.jpg" alt="" loading="lazy" onload="this.parentElement.classList.add('has-img')" onerror="this.remove()">
         <span class="proj-num">05</span>
         <div class="proj-deco-word">DUDLEY</div>
         <div class="proj-content">
@@ -626,6 +698,7 @@ footer {
 
     <div class="project-row duo">
       <div class="proj proj-olived reveal" style="min-height:380px">
+        <img class="proj-bg" src="images/06-big.jpg" alt="" loading="lazy" onload="this.parentElement.classList.add('has-img')" onerror="this.remove()">
         <span class="proj-num">06</span>
         <div class="proj-deco-word">BIG</div>
         <div class="proj-content">
@@ -635,6 +708,7 @@ footer {
         </div>
       </div>
       <div class="proj proj-bluelt reveal d1" style="min-height:380px">
+        <img class="proj-bg" src="images/07-hilton.jpg" alt="" loading="lazy" onload="this.parentElement.classList.add('has-img')" onerror="this.remove()">
         <span class="proj-num">07</span>
         <div class="proj-deco-word">HILTON</div>
         <div class="proj-content">
@@ -647,6 +721,7 @@ footer {
 
     <div class="project-row solo">
       <div class="proj proj-sand reveal" style="min-height:260px">
+        <img class="proj-bg" src="images/08-switzerland.jpg" alt="" loading="lazy" onload="this.parentElement.classList.add('has-img')" onerror="this.remove()">
         <span class="proj-num">08</span>
         <div class="proj-deco-word">RESIDENTIAL</div>
         <div class="proj-content">
@@ -659,6 +734,7 @@ footer {
 
     <div class="project-row trio">
       <div class="proj proj-blue reveal">
+        <img class="proj-bg" src="images/09-proportion.jpg" alt="" loading="lazy" onload="this.parentElement.classList.add('has-img')" onerror="this.remove()">
         <span class="proj-num">09</span>
         <div class="proj-deco-word">PROPORTION</div>
         <div class="proj-content">
@@ -668,6 +744,7 @@ footer {
         </div>
       </div>
       <div class="proj proj-olive reveal d1">
+        <img class="proj-bg" src="images/10-grenville.jpg" alt="" loading="lazy" onload="this.parentElement.classList.add('has-img')" onerror="this.remove()">
         <span class="proj-num">10</span>
         <div class="proj-deco-word">GRENVILLE</div>
         <div class="proj-content">
@@ -677,6 +754,7 @@ footer {
         </div>
       </div>
       <div class="proj proj-choco reveal d2">
+        <img class="proj-bg" src="images/11-circulus.jpg" alt="" loading="lazy" onload="this.parentElement.classList.add('has-img')" onerror="this.remove()">
         <span class="proj-num">11</span>
         <div class="proj-deco-word">CIRCULUS</div>
         <div class="proj-content">
@@ -689,6 +767,7 @@ footer {
 
     <div class="project-row duo">
       <div class="proj proj-terra reveal">
+        <img class="proj-bg" src="images/12-viv-id-sofa.jpg" alt="" loading="lazy" onload="this.parentElement.classList.add('has-img')" onerror="this.remove()">
         <span class="proj-num">12</span>
         <div class="proj-deco-word">VIV ID</div>
         <div class="proj-content">
@@ -698,6 +777,7 @@ footer {
         </div>
       </div>
       <div class="proj proj-taupe reveal d1">
+        <img class="proj-bg" src="images/13-table-lamp.jpg" alt="" loading="lazy" onload="this.parentElement.classList.add('has-img')" onerror="this.remove()">
         <span class="proj-num">13</span>
         <div class="proj-deco-word">LAMP</div>
         <div class="proj-content">
@@ -710,6 +790,7 @@ footer {
 
     <div class="project-row duo">
       <div class="proj proj-olived reveal" style="min-height:380px">
+        <img class="proj-bg" src="images/14-hublot.jpg" alt="" loading="lazy" onload="this.parentElement.classList.add('has-img')" onerror="this.remove()">
         <span class="proj-num">14</span>
         <div class="proj-deco-word">HUBLOT</div>
         <div class="proj-content">
@@ -719,6 +800,7 @@ footer {
         </div>
       </div>
       <div class="proj proj-bluelt reveal d1" style="min-height:380px">
+        <img class="proj-bg" src="images/15-fms.jpg" alt="" loading="lazy" onload="this.parentElement.classList.add('has-img')" onerror="this.remove()">
         <span class="proj-num">15</span>
         <div class="proj-deco-word">FMS</div>
         <div class="proj-content">
@@ -731,6 +813,7 @@ footer {
 
     <div class="project-row duo">
       <div class="proj proj-sand reveal">
+        <img class="proj-bg" src="images/16-acores.jpg" alt="" loading="lazy" onload="this.parentElement.classList.add('has-img')" onerror="this.remove()">
         <span class="proj-num">16</span>
         <div class="proj-deco-word">AÇORES</div>
         <div class="proj-content">
@@ -740,6 +823,7 @@ footer {
         </div>
       </div>
       <div class="proj proj-blue reveal d1">
+        <img class="proj-bg" src="images/17-ad-campaign.jpg" alt="" loading="lazy" onload="this.parentElement.classList.add('has-img')" onerror="this.remove()">
         <span class="proj-num">17</span>
         <div class="proj-deco-word">CAMPAIGN</div>
         <div class="proj-content">
@@ -821,11 +905,11 @@ footer {
   <div class="contact-right reveal d1">
     <div class="contact-item">
       <p class="c-label">Location</p>
-      <p class="c-value">Porto, Portugal</p>
+      <p class="c-value">Portugal</p>
     </div>
     <div class="contact-item">
       <p class="c-label">Disciplines</p>
-      <p class="c-value">Industrial N Product Design · CGI · Architectural Visualisation</p>
+      <p class="c-value">Product Design · CGI · Architectural Visualisation</p>
     </div>
     <div class="contact-item">
       <p class="c-label">Availability</p>
@@ -841,7 +925,7 @@ footer {
 <!-- FOOTER -->
 <footer>
   <span class="footer-mark">Catarina Quitério</span>
-  <span>Product Designer & CGI Artist</span>
+  <span>Industrial Designer & CGI Artist</span>
   <span>© 2026</span>
 </footer>
 
@@ -851,6 +935,78 @@ const obs = new IntersectionObserver(entries => {
   entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); } });
 }, { threshold: 0.1 });
 reveals.forEach(el => obs.observe(el));
+</script>
+
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Project gallery">
+  <button class="lb-close" id="lbClose" aria-label="Close gallery">&times;</button>
+  <button class="lb-prev" id="lbPrev" aria-label="Previous image">&#8249;</button>
+  <figure class="lb-stage"><img class="lb-img" id="lbImg" src="" alt=""></figure>
+  <button class="lb-next" id="lbNext" aria-label="Next image">&#8250;</button>
+  <div class="lb-meta">
+    <div class="lb-caption" id="lbCaption"></div>
+    <div class="lb-counter" id="lbCounter"></div>
+  </div>
+</div>
+
+<script>
+(function () {
+  const lb = document.getElementById('lightbox'),
+        lbImg = document.getElementById('lbImg'),
+        lbCap = document.getElementById('lbCaption'),
+        lbCount = document.getElementById('lbCounter'),
+        btnPrev = document.getElementById('lbPrev'),
+        btnNext = document.getElementById('lbNext'),
+        btnClose = document.getElementById('lbClose');
+  let imgs = [], idx = 0;
+
+  function imageExists(url) {
+    return new Promise(res => { const im = new Image(); im.onload = () => res(true); im.onerror = () => res(false); im.src = url; });
+  }
+  // Probe images/NN-name-2.ext, -3, ... and stop at the first one that isn't there
+  async function collectExtras(cover) {
+    const dot = cover.lastIndexOf('.'); const base = cover.slice(0, dot), ext = cover.slice(dot);
+    const found = []; let i = 2;
+    while (i <= 30) { const u = base + '-' + i + ext; if (await imageExists(u)) { found.push(u); i++; } else break; }
+    return found;
+  }
+  function show(i) {
+    if (!imgs.length) return;
+    idx = (i + imgs.length) % imgs.length;
+    lbImg.classList.remove('ready');
+    const tmp = new Image();
+    tmp.onload = () => { lbImg.src = imgs[idx]; lbImg.classList.add('ready'); };
+    tmp.src = imgs[idx];
+    lbCount.textContent = (idx + 1) + ' / ' + imgs.length;
+    const multi = imgs.length > 1;
+    btnPrev.hidden = !multi; btnNext.hidden = !multi;
+  }
+  function open(card) {
+    const cover = card.querySelector('.proj-bg'); if (!cover) return;
+    const src = cover.currentSrc || cover.getAttribute('src');
+    imgs = [src]; idx = 0;
+    const nameEl = card.querySelector('.proj-name');
+    lbCap.textContent = nameEl ? nameEl.textContent : '';
+    lb.classList.add('open'); document.body.style.overflow = 'hidden';
+    show(0);
+    collectExtras(src).then(extra => {
+      if (extra.length) { imgs = imgs.concat(extra); lbCount.textContent = (idx + 1) + ' / ' + imgs.length; btnPrev.hidden = btnNext.hidden = false; }
+    });
+  }
+  function close() { lb.classList.remove('open'); document.body.style.overflow = ''; }
+
+  const grid = document.querySelector('.project-list');
+  if (grid) grid.addEventListener('click', e => { const c = e.target.closest('.proj.has-img'); if (c) open(c); });
+  btnPrev.addEventListener('click', e => { e.stopPropagation(); show(idx - 1); });
+  btnNext.addEventListener('click', e => { e.stopPropagation(); show(idx + 1); });
+  btnClose.addEventListener('click', close);
+  lb.addEventListener('click', e => { if (e.target === lb) close(); });
+  document.addEventListener('keydown', e => {
+    if (!lb.classList.contains('open')) return;
+    if (e.key === 'Escape') close();
+    else if (e.key === 'ArrowLeft') show(idx - 1);
+    else if (e.key === 'ArrowRight') show(idx + 1);
+  });
+})();
 </script>
 </body>
 </html>
